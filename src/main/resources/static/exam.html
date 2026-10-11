@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Take Exam - Exam Simulator</title>
+    <link rel="stylesheet" href="/css/style.css?v=20261002-2">
+</head>
+<body>
+<header class="app-header">
+    <div class="container header-content">
+        <div>
+            <div class="brand">EXAM SIMULATOR</div>
+            <div class="subtitle">Certification exam practice</div>
+        </div>
+        <a href="/" class="header-link">New Test</a>
+    </div>
+</header>
+
+<main class="container page exam-page">
+    <section id="examSection">
+        <div class="exam-toolbar card">
+            <div>
+                <h1>Exam</h1>
+                <p id="examCount" class="help-text">Loading questions...</p>
+            </div>
+            <div class="exam-settings">
+                <label for="questionCount">No of questions:</label>
+                <div class="exam-settings-control">
+                    <input id="questionCount" type="number" min="1" step="1" placeholder="All">
+                    <button id="newSetBtn" class="btn btn-primary" type="button">Refresh Exam</button>
+                </div>
+            </div>
+            <div class="progress-wrap">
+                <div id="progressText">Answered: 0 / 0</div>
+                <div class="progress-track">
+                    <div id="progressBar" class="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="validationMessage" class="message error hidden"></div>
+        <div id="questionsContainer"></div>
+
+        <div class="submit-row">
+            <button id="submitExamBtn" class="btn btn-primary">Submit Exam</button>
+        </div>
+    </section>
+
+    <section id="resultSection" class="card result-card hidden">
+        <div class="result-icon">✓</div>
+        <h1>Exam Result</h1>
+        <div id="scoreDisplay" class="score-display"></div>
+
+        <div class="result-grid">
+            <div class="result-stat correct-stat">
+                <span id="correctAnswers" class="stat-value">0</span>
+                <span class="stat-label">Correct Answers</span>
+            </div>
+            <div class="result-stat incorrect-stat">
+                <span id="incorrectAnswers" class="stat-value">0</span>
+                <span class="stat-label">Incorrect Answers</span>
+            </div>
+            <button id="reviewAnswersBtn" class="result-stat result-stat-action review-stat" type="button"
+                    aria-expanded="false" aria-controls="answerReviewSection">
+                <span id="totalQuestions" class="stat-value">0</span>
+                <span class="stat-label">Total Questions · Review Answers</span>
+            </button>
+        </div>
+
+        <section id="answerReviewSection" class="answer-review hidden" aria-live="polite">
+            <h2>Answer Review</h2>
+            <div id="answerReviewContainer"></div>
+        </section>
+
+        <div class="button-row center">
+            <button id="retryExamBtn" class="btn btn-primary">Retry Exam</button>
+            <button id="newTestBtn" class="btn btn-secondary">New Test</button>
+        </div>
+    </section>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/js/exam.js?v=20261002-2"></script>
+</body>
+</html>

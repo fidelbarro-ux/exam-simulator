@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Simulator</title>
+    <link rel="stylesheet" href="/css/style.css?v=20261002-3">
+</head>
+<body>
+<header class="app-header">
+    <div class="container header-content">
+        <div>
+            <div class="brand">EXAM SIMULATOR</div>
+            <div class="subtitle">Certification exam practice</div>
+        </div>
+    </div>
+</header>
+
+<main class="container page">
+    <section class="card">
+        <div class="step-indicator">
+            <span class="step active">1</span>
+            <span class="step-label">Import Questions</span>
+            <span class="step-line"></span>
+            <span class="step">2</span>
+            <span class="step-label muted">Take Exam</span>
+            <span class="step-line"></span>
+            <span class="step">3</span>
+            <span class="step-label muted">Result</span>
+        </div>
+
+        <h1>Question Import / Generator</h1>
+        <p class="import-guidance">
+            Paste your multiple-choice questions below. The Question Generator supports
+            <strong><em>Question No. 1), No. 1), No. 1., 1), and 1.</em></strong>
+            question numbering. Each question must include a <strong><em>Correct Answer:</em></strong> and an <strong><em>Explanation:</em></strong>
+        </p>
+
+        <label for="questionContent" class="field-label">Exam questions</label>
+        <textarea id="questionContent" rows="20" placeholder="Paste exam questions here..."></textarea>
+
+        <div id="statusMessage" class="message hidden"></div>
+
+        <div class="button-row">
+            <button id="generateBtn" class="btn btn-primary">Generate Test</button>
+            <button id="clearBtn" class="btn btn-secondary">Clear</button>
+        </div>
+    </section>
+</main>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="/js/index.js?v=20261002-3"></script>
+</body>
+</html>
