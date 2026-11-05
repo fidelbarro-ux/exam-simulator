@@ -18,8 +18,15 @@ public class QuestionController {
 
     @PostMapping("/import")
     public ResponseEntity<ImportQuestionResponse> importQuestions(
-            @Valid @RequestBody ImportQuestionRequest request) {
+            @Valid @RequestBody ImportQuestionRequest request,
+            @RequestHeader(value = "X-Exam-Session-Id", required = false) String sessionId) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(questionImportService.importQuestions(request.getContent()));
+                .body(questionImportService.importQuestions(request.getContent(), normalizeSessionId(sessionId)));
+    }
+
+    private String normalizeSessionId(String sessionId) {
+        if (sessionId == null || sessionId.isBlank()) return "default";
+        if (!sessionId.matches("[A-Za-z0-9-]{1,64}")) throw new IllegalArgumentException("Invalid exam session ID");
+        return sessionId;
     }
 }

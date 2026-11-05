@@ -1,4 +1,5 @@
 $(function () {
+    const examSessionId = getExamSessionId();
     const sampleContent = `No. 1) Which of the following qualities is MORE likely to be found in a tester's mindset rather than in a developer's?
 
 a. A tester's mindset tends to grow and mature as the tester gains experience
@@ -75,6 +76,7 @@ Explanation: Regression testing checks whether changes damaged existing behavior
             url: '/api/questions/import',
             type: 'POST',
             contentType: 'application/json',
+            headers: { 'X-Exam-Session-Id': examSessionId },
             data: JSON.stringify({ content: content }),
             success: function (response) {
                 showMessage(
@@ -109,4 +111,16 @@ Explanation: Regression testing checks whether changes damaged existing behavior
         $('#statusMessage').addClass('hidden').text('');
         $('#startExamBtn').remove();
     });
+
+    function getExamSessionId() {
+        const key = 'examSimulatorSessionId';
+        let id = window.sessionStorage.getItem(key);
+        if (!id) {
+            id = window.crypto && window.crypto.randomUUID
+                ? window.crypto.randomUUID().replace(/[^A-Za-z0-9-]/g, '')
+                : Date.now().toString(36) + Math.random().toString(36).slice(2);
+            window.sessionStorage.setItem(key, id);
+        }
+        return id;
+    }
 });

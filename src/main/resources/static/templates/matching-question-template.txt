@@ -1,0 +1,21 @@
+TYPE: MATCHING
+
+ANSWERS:
+- Static testing
+- Unit testing
+- Testing whether changes have adversely affected existing functionality
+
+QUESTIONS:
+1. Testing individual components in isolation.
+2. Which activity identifies potential defects early?
+3. Which statement best describes regression testing?
+
+CORRECT ANSWERS:
+1. Unit testing
+2. Static testing
+3. Testing whether changes have adversely affected existing functionality
+
+EXPLANATIONS:
+1. Unit testing checks individual components in isolation.
+2. Static testing identifies defects without executing the software.
+3. Regression testing checks whether changes have adversely affected existing functionality.

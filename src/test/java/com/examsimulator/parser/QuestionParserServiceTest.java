@@ -2,6 +2,7 @@ package com.examsimulator.parser;
 
 import com.examsimulator.exception.InvalidQuestionFormatException;
 import com.examsimulator.service.QuestionParserService;
+import com.examsimulator.parser.QuestionType;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -172,5 +173,49 @@ class QuestionParserServiceTest {
                 """;
 
         assertThrows(InvalidQuestionFormatException.class, () -> parser.parse(content));
+    }
+
+    @Test
+    void parsesMatchingImportFormatWithoutChangingMultipleChoiceParsing() {
+        var result = parser.parseImport("""
+                TYPE: MATCHING
+
+                ANSWERS:
+                - Static testing
+                - Unit testing
+
+                QUESTIONS:
+                1. Testing individual components in isolation.
+                2. Which activity identifies potential defects early?
+
+                CORRECT ANSWERS:
+                1. Unit testing
+                2. Static testing
+
+                EXPLANATIONS:
+                1. Unit testing checks individual components in isolation.
+                2. Static testing identifies defects without executing the software.
+                """);
+
+        assertEquals(QuestionType.MATCHING, result.getType());
+        assertEquals(List.of("Static testing", "Unit testing"), result.getMatchingAnswers());
+        assertEquals("Unit testing", result.getMatchingQuestions().getFirst().getCorrectAnswer());
+        assertEquals("Static testing", result.getMatchingQuestions().get(1).getCorrectAnswer());
+    }
+
+    @Test
+    void rejectsMatchingAnswerThatIsNotInTheAnswerBank() {
+        assertThrows(InvalidQuestionFormatException.class, () -> parser.parseImport("""
+                TYPE: MATCHING
+                ANSWERS:
+                - Unit testing
+                - Static testing
+                QUESTIONS:
+                1. A prompt
+                CORRECT ANSWERS:
+                1. Integration testing
+                EXPLANATIONS:
+                1. Explanation
+                """));
     }
 }

@@ -34,8 +34,17 @@ public class ExamQuestion {
     @Column(name = "question_text", nullable = false, length = 4000)
     private String questionText;
 
-    @Column(name = "correct_answer", nullable = false, length = 10)
+    @Column(name = "correct_answer", nullable = false, length = 100)
     private String correctAnswer;
+
+    @Column(name = "question_type", nullable = false, length = 30)
+    private String questionType = "MULTIPLE_CHOICE";
+
+    @Column(name = "matching_group", length = 100)
+    private String matchingGroup;
+
+    @Column(name = "session_id", nullable = false, length = 64)
+    private String sessionId = "default";
 
     @Column(name = "explanation", nullable = false, length = 4000)
     private String explanation;

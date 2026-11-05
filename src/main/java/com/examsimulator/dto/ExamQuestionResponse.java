@@ -12,4 +12,6 @@ public class ExamQuestionResponse {
     private Integer questionNumber;
     private String questionText;
     private List<ExamOptionResponse> options;
+    private String questionType;
+    private String matchingGroup;
 }

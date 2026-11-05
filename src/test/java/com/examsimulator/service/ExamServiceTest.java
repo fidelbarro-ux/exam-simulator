@@ -37,7 +37,7 @@ class ExamServiceTest {
                 question(3L, 3, "C"),
                 question(4L, 4, "D")
         );
-        when(repository.findAllByOrderByQuestionNumberAsc()).thenReturn(questions);
+        when(repository.findAllBySessionIdOrderByQuestionNumberAsc("default")).thenReturn(questions);
     }
 
     @Test
@@ -170,6 +170,45 @@ class ExamServiceTest {
         assertThrows(ExamValidationException.class, () -> service.submit(request));
     }
 
+    @Test
+    void rejectsUnansweredMultipleChoiceQuestion() {
+        ExamSubmissionRequest request = new ExamSubmissionRequest();
+        request.setAnswers(List.of(answer(1L, "A"), answer(2L, null)));
+
+        assertThrows(ExamValidationException.class, () -> service.submit(request));
+    }
+
+    @Test
+    void scoresMatchingAnswerUsingItsOpaqueTermKey() {
+        ExamQuestion matching = question(1L, 1, "TERM_2");
+        matching.setQuestionType("MATCHING");
+        matching.getOptions().clear();
+        matching.addOption(option("TERM_1", "Static testing"));
+        matching.addOption(option("TERM_2", "Unit testing"));
+        when(repository.findAllBySessionIdOrderByQuestionNumberAsc("default")).thenReturn(List.of(matching));
+
+        ExamSubmissionRequest request = new ExamSubmissionRequest();
+        request.setAnswers(List.of(answer(1L, "TERM_2")));
+
+        ExamResultResponse result = service.submit(request);
+        assertEquals(1, result.getCorrectAnswers());
+        assertEquals("Unit testing", result.getAnswerReviews().getFirst().getSelectedAnswerText());
+    }
+
+    @Test
+    void rejectsUnansweredMatchingQuestion() {
+        ExamQuestion matching = question(1L, 1, "TERM_1");
+        matching.setQuestionType("MATCHING");
+        matching.getOptions().clear();
+        matching.addOption(option("TERM_1", "Static testing"));
+        when(repository.findAllBySessionIdOrderByQuestionNumberAsc("default")).thenReturn(List.of(matching));
+
+        ExamSubmissionRequest request = new ExamSubmissionRequest();
+        request.setAnswers(List.of(answer(1L, null)));
+
+        assertThrows(ExamValidationException.class, () -> service.submit(request));
+    }
+
     private ExamQuestion question(Long id, int number, String correct) {
         ExamQuestion question = new ExamQuestion();
         question.setId(id);
@@ -204,5 +243,12 @@ class ExamServiceTest {
         answer.setQuestionId(id);
         answer.setSelectedAnswer(selected);
         return answer;
+    }
+
+    private ExamOption option(String key, String text) {
+        ExamOption option = new ExamOption();
+        option.setOptionLetter(key);
+        option.setOptionText(text);
+        return option;
     }
 }
