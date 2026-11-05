@@ -1,0 +1,29 @@
+No. 1) Which of the following qualities is MORE likely to be found in a tester's mindset rather than in a developer's?
+
+a. A tester's mindset tends to grow and mature as the tester gains experience
+b. Ability to see what might go wrong
+c. Good communication with team members
+d. Focus on getting all things done
+
+Correct Answer: B
+Explanation: A tester anticipates problems and investigates what could fail.
+
+No. 2) Which statement best describes unit testing?
+
+a. Testing the complete application
+b. Testing individual components in isolation
+c. Testing network connectivity
+d. Testing production deployment
+
+Correct Answer: B
+Explanation: Unit testing verifies an individual component independently.
+
+No. 3) Which activity is most closely associated with identifying potential defects early?
+
+a. Static testing
+b. Production monitoring
+c. Database backup
+d. Release packaging
+
+Correct Answer: A
+Explanation: Static testing finds issues before the software is executed.

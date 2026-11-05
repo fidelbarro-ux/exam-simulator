@@ -32,7 +32,12 @@ public class ExamService {
 
     @Transactional(readOnly = true)
     public List<ExamQuestionResponse> getRandomizedQuestions(Integer count) {
-        List<ExamQuestion> questions = new ArrayList<>(questionRepository.findAllByOrderByQuestionNumberAsc());
+        return getRandomizedQuestions(count, "default");
+    }
+
+    @Transactional(readOnly = true)
+    public List<ExamQuestionResponse> getRandomizedQuestions(Integer count, String sessionId) {
+        List<ExamQuestion> questions = new ArrayList<>(questionRepository.findAllBySessionIdOrderByQuestionNumberAsc(sessionId));
 
         if (count != null && count < 1) {
             throw new ExamValidationException("Question count must be at least 1.");
@@ -53,7 +58,12 @@ public class ExamService {
 
     @Transactional(readOnly = true)
     public ExamResultResponse submit(ExamSubmissionRequest request) {
-        List<ExamQuestion> allQuestions = questionRepository.findAllByOrderByQuestionNumberAsc();
+        return submit(request, "default");
+    }
+
+    @Transactional(readOnly = true)
+    public ExamResultResponse submit(ExamSubmissionRequest request, String sessionId) {
+        List<ExamQuestion> allQuestions = questionRepository.findAllBySessionIdOrderByQuestionNumberAsc(sessionId);
 
         if (allQuestions.isEmpty()) {
             throw new ExamValidationException("No exam questions are available. Import questions first.");
@@ -77,14 +87,15 @@ public class ExamService {
 
         for (ExamQuestion question : questions) {
             SubmittedAnswer submitted = submittedByQuestionId.get(question.getId());
-            String selected = submitted.getSelectedAnswer().trim().toUpperCase(Locale.ROOT);
+            String selected = submitted.getSelectedAnswer() == null
+                    ? null : submitted.getSelectedAnswer().trim().toUpperCase(Locale.ROOT);
             String correctAnswer = question.getCorrectAnswer().toUpperCase(Locale.ROOT);
-            boolean isCorrect = correctAnswer.equalsIgnoreCase(selected);
+            boolean isCorrect = selected != null && correctAnswer.equalsIgnoreCase(selected);
             if (isCorrect) {
                 correct++;
             }
 
-            String selectedAnswerText = optionText(question, selected);
+            String selectedAnswerText = selected == null ? null : optionText(question, selected);
             String correctAnswerText = optionText(question, correctAnswer);
             answerReviews.add(new ExamAnswerReviewResponse(
                     question.getQuestionNumber(),
@@ -97,7 +108,7 @@ public class ExamService {
                     question.getExplanation(),
                     question.getOptions().stream()
                             .map(option -> new ExamOptionResponse(option.getOptionLetter(), option.getOptionText()))
-                            .toList()));
+                            .toList(), question.getQuestionType()));
         }
 
         int total = questions.size();
@@ -133,17 +144,18 @@ public class ExamService {
                         "Duplicate submitted answer for question ID: " + answer.getQuestionId());
             }
 
-            if (answer.getSelectedAnswer() == null || answer.getSelectedAnswer().isBlank()) {
-                throw new ExamValidationException(
-                        "Missing answer for question ID: " + answer.getQuestionId());
-            }
-
-            String selected = answer.getSelectedAnswer().trim().toUpperCase(Locale.ROOT);
             ExamQuestion question = questions.stream()
                     .filter(q -> q.getId().equals(answer.getQuestionId()))
                     .findFirst()
                     .orElseThrow();
 
+            if (answer.getSelectedAnswer() == null || answer.getSelectedAnswer().isBlank()) {
+                throw new ExamValidationException(
+                        "All questions must have an answer. Missing answer for question ID: "
+                                + answer.getQuestionId());
+            }
+
+            String selected = answer.getSelectedAnswer().trim().toUpperCase(Locale.ROOT);
             boolean validOption = question.getOptions().stream()
                     .anyMatch(option -> option.getOptionLetter().equalsIgnoreCase(selected));
 
@@ -166,7 +178,7 @@ public class ExamService {
                 question.getId(),
                 question.getQuestionNumber(),
                 question.getQuestionText(),
-                options);
+                options, question.getQuestionType(), question.getMatchingGroup());
     }
 
     private String optionText(ExamQuestion question, String letter) {

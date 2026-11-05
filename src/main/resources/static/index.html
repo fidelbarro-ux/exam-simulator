@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exam Simulator</title>
-    <link rel="stylesheet" href="/css/style.css?v=20261002-3">
+    <link rel="stylesheet" href="/css/style.css?v=20261012-2">
 </head>
 <body>
 <header class="app-header">
@@ -31,10 +31,16 @@
 
         <h1>Question Import / Generator</h1>
         <p class="import-guidance">
-            Paste your multiple-choice questions below. The Question Generator supports
+            Paste multiple-choice or matching questions below. The Question Generator supports
             <strong><em>Question No. 1), No. 1), No. 1., 1), and 1.</em></strong>
-            question numbering. Each question must include a <strong><em>Correct Answer:</em></strong> and an <strong><em>Explanation:</em></strong>
+            question numbering. Multiple-choice questions require a <strong><em>Correct Answer:</em></strong> and an <strong><em>Explanation:</em></strong>.
         </p>
+
+        <div class="template-downloads" aria-label="Question format templates">
+            <span>Download a template:</span>
+            <a class="template-download" href="/templates/matching-question-template.txt" download>Matching type</a>
+            <a class="template-download" href="/templates/multiple-choice-question-template.txt" download>Multiple choice</a>
+        </div>
 
         <label for="questionContent" class="field-label">Exam questions</label>
         <textarea id="questionContent" rows="20" placeholder="Paste exam questions here..."></textarea>
@@ -49,6 +55,6 @@
 </main>
 
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="/js/index.js?v=20261002-3"></script>
+<script src="/js/index.js?v=20261012-3"></script>
 </body>
 </html>

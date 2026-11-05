@@ -17,4 +17,5 @@ public class ExamAnswerReviewResponse {
     private boolean correct;
     private String explanation;
     private List<ExamOptionResponse> options;
+    private String questionType;
 }
